@@ -28,11 +28,30 @@ end
 
 df = floor(0.1*size(time_freq_mat,1));
 dt = floor(0.01*size(time_freq_mat,2));
-anchor_mat = zeros(size(time_freq_mat));
+anchor_points = [];
 
 for i = 1:size(time_freq_mat,1) % freq
     for j = 1:size(time_freq_mat,2) % time
-        time_freq_mat(max(i-df,1):min(i+df,size(time_freq_mat,1)),max(j-dt,1)
+        selected_window = time_freq_mat(max(i-df,1):min(i+df,size(time_freq_mat,1)),...
+            max(j-dt,1):min(j+dt,size(time_freq_mat,2)));
+        if(time_freq_mat(i,j) == max(selected_window(:)))
+            anchor_points = [anchor_points; [i, j]];
+        end
+    end
+end
+
+%% finding neighbors of anchor points
+
+df_neighbor = floor(0.1*size(time_freq_mat,1));
+dt_neighbor = 5/window_time;
+neighbors = [];
+
+for i = 1:length(anchor_points)
+    j = i;
+    while(j <= length(anchor_points)...
+            && anchor_points(j,2) <= anchor_points(i,2) + dt_neighbor)
+        if(anchor_points(j,1) >= 
+        
         
     end
 end
