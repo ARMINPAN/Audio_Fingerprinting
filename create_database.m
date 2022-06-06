@@ -4,6 +4,8 @@ clear; clc; close all;
 database = containers.Map('KeyType','char','ValueType','char');
 
 %% 
+clc;
+
 files = dir(fullfile('musics/','*.mp3'));
 [filenames{1:size(files,1)}] = deal(files.name);
 
@@ -19,6 +21,7 @@ for k = 1:1%length(filenames)
     downsampled_Fs = 8000;
     [Numer, Denom] = rat(downsampled_Fs/Fs);
     audioMono = resample(audioMono, Numer, Denom);
+    % audioMono = awgn(audioMono,10);
 
     % create the time frequency matrix of the audio using fft
     window_time = 0.1;
@@ -45,7 +48,6 @@ for k = 1:1%length(filenames)
     grid on; grid minor;
 
     % creating hash tags
-
     df_hash = floor(0.1*size(time_freq_mat,1));
     dt_hash = 20/window_time;
     [hash_key, hash_value] = create_hash_tags(anchor_points, df_hash, dt_hash, 2);

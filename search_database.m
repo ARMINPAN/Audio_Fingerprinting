@@ -3,7 +3,7 @@ clear; close all; clc;
 
 database = load('database/database.mat').database;
 
-%% calculate the hash value for the given song
+%% calculate the hash tags for the given song
 
 % load the audio
 [audio, Fs] = audioread('test_musics/music1.mp3');
@@ -41,7 +41,7 @@ xlim([time(1) time(end)]);
 ylim([freq(1) freq(end)]);
 grid on; grid minor;
 
-% create the hash value
+% create the hash tags
 df_hash = floor(0.1*size(time_freq_mat,1));
 dt_hash = 20/window_time;
 [hash_key, hash_value] = create_hash_tags(anchor_points, df_hash, dt_hash, 0);
@@ -65,6 +65,4 @@ end
 %% scoring
 clc; close all;
 
-scoring(list,window_time)
-
-
+scoring(list)
