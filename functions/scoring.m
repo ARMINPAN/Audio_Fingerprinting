@@ -11,10 +11,9 @@ function score = scoring(list)
             % score formula (using repetition num and std of delta ts)
             score(i, 2) = log10(num)*(1-exp((1-num)/10))*(1/(standard_dev+eps)); 
         end
-
-        % transfer through softmax function to get probabilites between 0&1
+        % applying softmax function to get probability distribution
         score(:, 2) = exp(score(:,2))./sum(exp(score(:,2)));
-        % sort based on scores
+        % sorting based on scores
         [~, permutation] = sort(score(:, 2),'descend');
         score = score(permutation, :);
     else

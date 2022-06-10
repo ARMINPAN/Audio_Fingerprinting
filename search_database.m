@@ -1,12 +1,14 @@
-%% load the created database
+%% adding the path of functions folders
+addpath('functions/');
+
+%% loading the created database
 clear; close all; clc;
 
 database = load('database/database.mat').database;
 
-
 %% calculate the hash tags for the given song
 
-% Import an audio
+% importing an audio
 song_num = 3; % music i
 path = 'test_musics/'; % test musics path
 [downsampled_Fs, audioMono] = import_audio(path, song_num);
@@ -15,16 +17,16 @@ path = 'test_musics/'; % test musics path
 start_time = randi([1 int32(0.9*length(audioMono))]);
 audioMono = audioMono(start_time:start_time+0.1*length(audioMono));
 audioMono = awgn(audioMono,2);
-% Create the time frequency matrix of the audio using fft and an
-% overlapping sliding window with the length of "window_time"
+
+
+% creating the time-freq matrix of the audio using fft and an overlapping sliding window with the length of "window_time"
 window_time = 0.1;
 [time, freq, time_freq_mat] = STFT(audioMono, downsampled_Fs, window_time);
 
-
-% A full screen figure for plots
+% a full screen figure for plots
 figure('Units','normalized','Position',[0 0 1 1])
 
-% Plot the stft
+% plotting the stft
 subplot(1,2,1);
 pcolor(time, freq, time_freq_mat);
 shading interp
@@ -33,13 +35,12 @@ xlabel('time(s)');
 ylabel('frequency(Hz)');
 title('STFT(dB)');
 
-% Finding the anchor points from time_freq_mat using a sliding window
-% with size of 2dt*2df
+% finding the anchor points from time_freq_mat using a sliding window with the size of 2dt*2df
 df = floor(0.1*size(time_freq_mat, 1)/4);
 dt = 2/window_time;
-% Function for finding anchor points
+% finding anchor points
 anchor_points = find_anchor_points(time_freq_mat, dt, df);
-% Plot the anchor points
+% plotting the anchor points
 subplot(1,2,2);
 scatter(time(anchor_points(:, 2)), freq(anchor_points(:, 1)),'x');
 xlabel('time(s)','interpreter','latex');
@@ -49,22 +50,20 @@ xlim([time(1) time(end)]);
 ylim([freq(1) freq(end)]);
 grid on; grid minor;
 
-% Create the hash table using a window with size of dt*2df for each
-% anchor point
+% creating the hash tags using a window with the size of dt*2df for each anchor point
 df_hash = floor(0.1*size(time_freq_mat,1));
 dt_hash = 20/window_time;
-% "create_hash_tags" function creates keys and values for each group of
-% points founded in it
+% creating hash-keys and hash-values for each pair of anchor points
 % Key format: (f1*f2*(t2-t1)) 
 % Value format: (song_name*time_from_start)
 [hash_key, hash_value] = create_hash_tags(anchor_points, df_hash, dt_hash, 0);
 
-%% search hash tags
+%% searching hash tags
 clc; close all;
 
 list = []; 
 
-% Add key and values founded for this song to the database
+% searching for found hash-keys in the database
 for i = 1:length(hash_key)
     key_tag = [num2str(hash_key(i, 1)), '*', num2str(hash_key(i, 2)), '*', num2str(hash_key(i, 3))];
     if (isKey(database, key_tag))
