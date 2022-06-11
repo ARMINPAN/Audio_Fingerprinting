@@ -1,5 +1,9 @@
-%% adding the path of functions folders
+%% adding the path of subfolders
+clc;
 addpath('functions/');
+addpath('database/');
+addpath('musics/');
+addpath('test_musics/');
 
 %% loading the created database
 clear; close all; clc;
@@ -9,15 +13,14 @@ database = load('database/database.mat').database;
 %% calculate the hash tags for the given song
 
 % importing an audio
-song_num = 3; % music i
 path = 'test_musics/'; % test musics path
-[downsampled_Fs, audioMono] = import_audio(path, song_num);
+song_num = 1; % music i
+format = '.wav';
+[downsampled_Fs, audioMono] = import_audio(path, song_num, format);
 
-% select a random part of the song with length = 0.1*length of the song
-start_time = randi([1 int32(0.9*length(audioMono))]);
-audioMono = audioMono(start_time:start_time+0.1*length(audioMono));
-audioMono = awgn(audioMono,2);
-
+% adding noise to the audio
+snr = 10;
+audioMono = awgn(audioMono,snr);
 
 % creating the time-freq matrix of the audio using fft and an overlapping sliding window with the length of "window_time"
 window_time = 0.1;
@@ -78,4 +81,4 @@ end
 %% scoring
 clc; close all;
 
-scoring(list)
+scoring(list);

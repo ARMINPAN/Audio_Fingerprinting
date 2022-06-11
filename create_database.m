@@ -1,5 +1,9 @@
-%% adding the path of functions folders
+%% adding the path of subfolders
 addpath('functions/');
+addpath('database/');
+addpath('musics/');
+addpath('test_musics/');
+
 
 %% creating the database
 clear; clc; close all;
@@ -26,7 +30,8 @@ for k = 1:length(filenames)
     disp("Uploading music " + k + " to the database...")
     
     % importing audio 
-    [downsampled_Fs, audioMono] = import_audio(path, k);
+    format = '.mp3';
+    [downsampled_Fs, audioMono] = import_audio(path, k, format);
 
     % creating the time-freq matrix of the audio using fft and an overlapping sliding window with the length of "window_time"
     window_time = 0.1;

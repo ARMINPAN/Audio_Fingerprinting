@@ -16,6 +16,11 @@ function score = scoring(list)
         % sorting based on scores
         [~, permutation] = sort(score(:, 2),'descend');
         score = score(permutation, :);
+        songs_names = load('database/songs_names.mat').songs_names;
+        for i = 1:length(score)
+            fprintf([num2str(score(i,1)),' - ', num2str(score(i,2)),...
+                ' - ', songs_names{score(i,1)}, '\n']);
+        end
     else
         fprintf('list cannot be empty');
     end
